@@ -1,0 +1,46 @@
+{
+  "builders": [{
+    "name": "basic",
+    "type": "virtualbox",
+    "guest_os_type": "Ubuntu_64",
+    "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.2-server-amd64.iso",
+    "iso_checksum": "af5f788aee1b32c4b2634734309cc9e9",
+    "iso_checksum_type": "md5",
+    "ssh_username": "ubuntu",
+    "ssh_password": "ubuntu",
+    "ssh_wait_timeout": "2000s",
+    "disk_size": 10000,
+    "guest_additions_path": "",
+    "shutdown_command": "echo 'shutdown -P now' > shutdown.sh; echo 'ubuntu'|sudo -S sh 'shutdown.sh'",
+    "shutdown_timeout": "5m",
+    "http_directory": "configs/",
+    "http_port_min": 8000,
+    "http_port_max": 9000,
+    "output_directory": "./boxout/",
+    "boot_command": [
+      "<esc><esc><enter><wait>",
+      "/install/vmlinuz noapic ",
+      "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+      "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+      "hostname={{ .Name }} ",
+      "fb=false debconf/frontend=noninteractive ",
+      "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+      "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+      "initrd=/install/initrd.gz -- <enter>"
+    ]
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "scripts": [
+      "./scripts/ubuntu/apt.sh",
+      "./scripts/ubuntu/build-essential.sh",
+      "./scripts/vagrant-bootstrap.sh",
+      "./scripts/vbox-extensions.sh",
+      "./scripts/cleanup.sh"
+    ],
+    "execute_command" : "echo 'ubuntu' | sudo -S bash '{{ .Path }}'"
+  }],
+  "post-processors": [{
+    "type": "vagrant"
+  }]
+}

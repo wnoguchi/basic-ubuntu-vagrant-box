@@ -1,7 +1,7 @@
 basic-ubuntu-vagrant-box
 =====
 
-Vagrant and Packer.io configuration and shell scripts for building basic Ubuntu Vagrant Box
+Vagrant and Packer.io configuration and shell scripts for building basic Ubuntu Vagrant Box locally.
 
 Dependencies to Install:
 -----------------------
